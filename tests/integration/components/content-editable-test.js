@@ -51,7 +51,7 @@ module('Integration | Component | content editable', function(hooks) {
   test('placeholder renders and stays on focus until the element has content', async function(assert) {
     assert.expect(5);
     this.set("value", "");
-    await render(hbs`{{content-editable value=value placeholder="bananas"}}`);
+    await render(hbs`{{content-editable value=this.value placeholder="bananas"}}`);
 
     assert.dom('.ember-content-editable').hasAttribute('placeholder', 'bananas')
 
@@ -73,7 +73,7 @@ module('Integration | Component | content editable', function(hooks) {
     assert.expect(2);
     this.set("value", "");
     await render(
-      hbs`{{content-editable tabindex="0" value=value placeholder="bananas" clearPlaceholderOnFocus="true"}}`
+      hbs`{{content-editable tabindex="0" value=this.value placeholder="bananas" clearPlaceholderOnFocus="true"}}`
     );
 
     const editable = this.element.getElementsByClassName('ember-content-editable')[0];
@@ -88,7 +88,7 @@ module('Integration | Component | content editable', function(hooks) {
   test('value updated when input changes', async function(assert) {
     assert.expect(2);
     this.set("value", "");
-    await render(hbs`{{content-editable value=value placeholder="bananas"}}`);
+    await render(hbs`{{content-editable value=this.value placeholder="bananas"}}`);
 
     assert.equal(this.value, "", "Initial value is correct");
 
@@ -100,7 +100,7 @@ module('Integration | Component | content editable', function(hooks) {
   test('input updated when value changes', async function(assert) {
     assert.expect(2);
     this.set("value", "");
-    await render(hbs`{{content-editable value=value placeholder="bananas"}}`);
+    await render(hbs`{{content-editable value=this.value placeholder="bananas"}}`);
 
     assert.dom('.ember-content-editable').hasText('');
 
@@ -130,7 +130,7 @@ module('Integration | Component | content editable', function(hooks) {
 
     await render(hbs`
         {{content-editable value="test" placeholder="bananas"
-         key-up=(action key-up) key-down=(action key-down) key-press=(action key-press)}}
+         key-up=(action this.key-up) key-down=(action this.key-down) key-press=(action this.key-press)}}
     `);
 
     await triggerEvent('.ember-content-editable', 'keydown');
@@ -153,8 +153,8 @@ module('Integration | Component | content editable', function(hooks) {
 
     await render(hbs`
         {{content-editable value="test" placeholder="bananas"
-         escape-press=(action escape-press) insert-newline=(action insert-newline)
-         enter=(action enter)}}
+         escape-press=(action this.escape-press) insert-newline=(action this.insert-newline)
+         enter=(action this.enter)}}
     `);
 
     await triggerKeyEvent('.ember-content-editable', 'keydown', 27);
@@ -173,7 +173,7 @@ module('Integration | Component | content editable', function(hooks) {
 
     await render(hbs`
         {{content-editable value="test" placeholder="bananas"
-         focusOut=(action focusOut) focusIn=(action focusIn)}}
+         focusOut=(action this.focusOut) focusIn=(action this.focusIn)}}
     `);
 
     await focus('.ember-content-editable');
@@ -213,7 +213,7 @@ module('Integration | Component | content editable', function(hooks) {
       assert.ok(!event.defaultPrevented);
     });
 
-    await render(hbs`{{content-editable allowNewlines=true value=value key-down=keyDown}}`);
+    await render(hbs`{{content-editable allowNewlines=true value=this.value key-down=this.keyDown}}`);
 
     triggerKeyEvent('.ember-content-editable', 'keydown', 13); //enter
     triggerKeyEvent('.ember-content-editable', 'keydown', 65); //non-enter
@@ -226,7 +226,7 @@ module('Integration | Component | content editable', function(hooks) {
       assert.ok(!event.defaultPrevented);
     });
 
-    await render(hbs`{{content-editable allowNewlines=false value=value key-down=keyDown}}`);
+    await render(hbs`{{content-editable allowNewlines=false value=this.value key-down=this.keyDown}}`);
 
     triggerKeyEvent('.ember-content-editable', 'keydown', 13); //enter
     triggerKeyEvent('.ember-content-editable', 'keydown', 65); //non-enter
@@ -238,7 +238,7 @@ module('Integration | Component | content editable', function(hooks) {
     assert.expect(1);
     this.set('value', "");
 
-    await render(hbs`{{content-editable value=value maxlength='2000'}}`);
+    await render(hbs`{{content-editable value=this.value maxlength='2000'}}`);
 
     const editable = this.element.getElementsByClassName('ember-content-editable')[0];
     await focus('.ember-content-editable');
@@ -251,7 +251,7 @@ module('Integration | Component | content editable', function(hooks) {
     assert.expect(1);
     this.set('value', "");
 
-    await render(hbs`{{content-editable value=value type='html'}}`);
+    await render(hbs`{{content-editable value=this.value type='html'}}`);
 
     const editable = this.element.getElementsByClassName('ember-content-editable')[0];
     await focus('.ember-content-editable');
@@ -267,7 +267,7 @@ module('Integration | Component | content editable', function(hooks) {
       assert.equal(text, 'Pasted text');
     });
 
-    await render(hbs`{{content-editable value=value paste=paste}}`);
+    await render(hbs`{{content-editable value=this.value paste=this.paste}}`);
 
     const editable = this.element.getElementsByClassName('ember-content-editable')[0];
     await focus('.ember-content-editable');
@@ -281,7 +281,7 @@ module('Integration | Component | content editable', function(hooks) {
       assert.ok(false, 'paste event should not be triggered when maxlength is exceeded');
     });
 
-    await render(hbs`{{content-editable value=value maxlength='2'}}`);
+    await render(hbs`{{content-editable value=this.value maxlength='2'}}`);
 
     const editable = this.element.getElementsByClassName('ember-content-editable')[0];
     await focus('.ember-content-editable');
